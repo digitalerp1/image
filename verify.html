@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Verification</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; text-align: center; }
+        .container { padding: 2rem; border: 1px solid #ccc; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Verification Status</h1>
+        <p id="message">Please wait, checking your verification status...</p>
+        <a href="/sign_up.html">Back to Sign Up</a>
+    </div>
+
+    <script>
+        // अपनी Supabase URL और Key यहाँ डालें
+        const SUPABASE_URL = 'https://edbkjwmueiibbkgtookk.supabase.co'; 
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVkYmtqd211ZWlpYmJrZ3Rvb2trIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxMDg5NDAsImV4cCI6MjA3NDY4NDk0MH0.B-hCqExkfM7knqVM1Ed12ff6scfjiuJVCSHZYTVOaYM'; 
+
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const messageEl = document.getElementById('message');
+
+        // यह फंक्शन जांच करेगा कि उपयोगकर्ता लॉग इन है या नहीं
+        const checkUserSession = async () => {
+            const { data, error } = await _supabase.auth.getSession();
+            
+            if (data.session) {
+                // अगर सेशन मौजूद है, मतलब ईमेल वेरिफाई हो गया है और उपयोगकर्ता लॉग इन है
+                messageEl.textContent = 'Your email has been successfully verified! You are now logged in.';
+                // आप उपयोगकर्ता को डैशबोर्ड पर भेज सकते हैं
+                // window.location.href = '/admin_panel.js'; // या जो भी आपका डैशबोर्ड पेज है
+            } else {
+                // अगर कोई सेशन नहीं है
+                messageEl.textContent = 'Verification processed. You can now try to log in.';
+            }
+        };
+
+        // पेज लोड होने पर Supabase JS लाइब्रेरी URL में दिए गए टोकन को अपने आप प्रोसेस कर लेती है।
+        // हमें बस सेशन चेक करना है।
+        checkUserSession();
+    </script>
+
+</body>
+</html>
